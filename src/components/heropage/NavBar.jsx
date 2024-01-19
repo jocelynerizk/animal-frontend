@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { BrowserRouter, Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { FaBars, FaTimes } from "react-icons/fa";
-import logo from "../../Svgs/logo.svg";
+import logo from "../../images/logo1.png";
 import Search from '../heropage/Search';
 
 

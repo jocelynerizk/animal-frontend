@@ -1,0 +1,24 @@
+.SignIn-container{
+    font-family: "Playfair Display";
+}
+@media (max-width: 767px) {
+    .SignIn-container {
+   background-image: url("../../public/Images/12-1.JPG");
+   background-size: cover;
+   background-position: center;
+
+    }
+    .SignIn-form{
+        width: 100vw;
+    }
+  
+    .SignIn-img {
+      display: none;
+    }
+
+    .text-shadow{
+      text-shadow: 0 0 2px white;
+    }
+    
+
+  }

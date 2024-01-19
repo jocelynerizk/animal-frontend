@@ -1,4 +1,5 @@
 import React from 'react';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 import AdminDashboard from './Pages/AdminDashboard';
@@ -12,10 +13,12 @@ import Team from '../src/Dashcomponents/DashModals/Team';
 import Logout from '../src/Dashcomponents/DashModals/Logout';
 import SignIn from './Pages/SignIn';
 
+const theme = createTheme();
 
 const App = () => {
   return (
     <div className="App">
+    <ThemeProvider theme={theme}>
 
         <Routes>
           <Route path="/" element={<Homepage />} />
@@ -30,6 +33,7 @@ const App = () => {
           <Route path="/Singlecar" element={<Singlecar />} />
 
         </Routes>
+        </ThemeProvider>
 
     </div>
   );

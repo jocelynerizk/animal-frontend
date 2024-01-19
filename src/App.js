@@ -11,7 +11,10 @@ import Allcars from '../src/Dashcomponents/DashModals/Allcars';
 import Singlecar from './Dashcomponents/DashModals/Singlecar';
 import Team from '../src/Dashcomponents/DashModals/Team';
 import Logout from '../src/Dashcomponents/DashModals/Logout';
-import SignIn from './Pages/SignIn';
+import SignIn from "./Pages/SignIn";
+import SignUP from "./Pages/SignUp";
+import DashBoard from "./Pages/Dashboard"
+
 
 const theme = createTheme();
 
@@ -30,7 +33,9 @@ const App = () => {
           <Route path="/Team" element={<Team />} />
           <Route path="/Logout" element={<Logout />} />
           <Route path="/SignIn" element={<SignIn />} />
+        <Route path="/SignUp" element={<SignUP />} />
           <Route path="/Singlecar" element={<Singlecar />} />
+          <Route path="/*" element={<DashBoard />} />
 
         </Routes>
         </ThemeProvider>

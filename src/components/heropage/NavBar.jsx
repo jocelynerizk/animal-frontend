@@ -26,7 +26,7 @@ const NavBar = () => {
         <a href="/" className="nav-link">Home</a>
         <a href="AboutUS" className="nav-link">About US</a>
         <a href="ContactUs" className="nav-link">Contact Us</a>
-        <a href="login" className="nav-link">LOG IN</a>
+        <a href="SignIn" className="nav-link">Sign In</a>
         <button className="nav-btn nav-close-btn" onClick={showNavBar}>
           <FaTimes />
         </button>

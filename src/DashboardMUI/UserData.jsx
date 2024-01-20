@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from "react";
+import { Link } from 'react-router-dom';
 import Container from "@mui/material/Container";
 import { Grid } from "@mui/material";
+
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
+  Button,
 } from "@mui/material";
 import axios from "axios";
+import details from "../images/details.png";
+import nouveau from "../images/add.png";
 
-const UserData = () => {
+const CompanyDash = () => {
   const [dataUser, setDataUser] = useState([]);
 
   useEffect(() => {
@@ -32,6 +37,7 @@ const UserData = () => {
   }, []);
 
   console.log("users", dataUser);
+  const companyUsers = dataUser.filter((user) => user.role === "admin");
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4, ml: 0 }}>
@@ -40,14 +46,14 @@ const UserData = () => {
           <Table size="small">
             <TableHead>
               <TableRow>
-                <TableCell>User Name</TableCell>
+                <TableCell>Company Name</TableCell>
                 <TableCell>Phone Number</TableCell>
                 <TableCell>Email</TableCell>
                 <TableCell>Apply Date</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {dataUser.map((data) => (
+            {companyUsers.map((data) => (
                 <TableRow key={data._id}>
                   <TableCell>
                     {data.firstName} {data.LastName}
@@ -57,14 +63,27 @@ const UserData = () => {
                   <TableCell>
                     {new Date(data.createdAt).toISOString().split("T")[0]}
                   </TableCell>
+                  <TableCell>
+                  <Link to="/edit-user">
+                        <Button >
+                          <img src= {details} alt="Details" />
+                        </Button>
+                        </Link>
+
+                      </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
+          <Link to="/add-user">
+          <Button>
+            <img src={nouveau} alt="Nouveau" />
+          </Button>
+        </Link>
         </Grid>
       </Grid>
     </Container>
   );
 };
 
-export default UserData;
+export default CompanyDash;

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import CssBaseline from "@mui/material/CssBaseline";
 import NavBar from '../components/heropage/NavBar.jsx';
 import Footer from '../components/heropage/Footer.jsx';
 import { useForm, ValidationError } from '@formspree/react';
@@ -29,9 +30,11 @@ function ContactUs() {
   };
 
   return (
-    <Container>
-      <NavBar />
+    <Container component="main" maxWidth="xl" style={{ backgroundColor: '#f0f8ff', padding: '20px' }}>
+<CssBaseline />
 
+ <NavBar />
+ <Container  maxWidth="xs">
       <form onSubmit={handleFormSubmit}>
         <Typography variant="h4" gutterBottom>
           Contact Us
@@ -79,6 +82,8 @@ function ContactUs() {
           variant="contained"
           color="primary"
           disabled={state.submitting}
+          style={{ marginLeft: '80%' }}
+
         >
           Submit
         </Button>
@@ -88,9 +93,12 @@ function ContactUs() {
         <Typography variant="body1" gutterBottom>
         </Typography>
       )}
+      </Container>
+          <Footer />
 
-      <Footer />
+
     </Container>
+
   );
 }
 

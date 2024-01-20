@@ -1,217 +1,188 @@
-import React from 'react'
-import Container from "@mui/material/Container";
-import { Grid, Paper } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import axios from 'axios';
 import {
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TableRow,
-  Select,
-  MenuItem,
-  OutlinedInput,
-} from "@mui/material";
-import { useEffect } from "react";
-import axios from "axios";
-  const token = localStorage.getItem("token");
-   
+  Button,
+  Modal,
+  Paper,
+  Backdrop,
+  Fade
+} from '@material-ui/core';
+import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon } from '@material-ui/icons';
+import AddCategory from "../Dashcomponents/DashModals/AddCategory";
+import DeleteCategory from "../Dashcomponents/DashModals/DeleteCategory";
+import EditCategory from "../Dashcomponents/DashModals/EditCategory";
+import { Link } from 'react-router-dom';
+import nouveau from "../images/add.png";
+import details from "../images/details.png";
+
 const CategoryDash = () => {
-  const [submissions, setSubmission] = React.useState([]);
-  const [status,setStatus]=React.useState("")
-  const handleDownloadImages = (imageUrls, downloadFileName) => {
-  console.log("imageurls",imageUrls)
-  if (imageUrls && imageUrls.length > 0) {
-    const links = imageUrls.map((imageUrl, index) => ({
-      href: imageUrl,
-      download: `${downloadFileName}_${index + 1}.png`,
-    }));
-    console.log("links",links)
-  //  const link = document.createElement("a");
-    const anchor = document.createElement("a");
-    anchor.href = links[0].href;
-    anchor.target = "_blank";
-    anchor.download = links[0].download; // Set the desired file name
-    document.body.appendChild(anchor);
-    anchor.click();
-    document.body.removeChild(anchor);
-    // Create links and append them to the document
-    // links.forEach((linkInfo) => {
-   
-    //   link.href = linkInfo.href;
-    //   link.target = "_blank";
-    //   link.download = linkInfo.download;
-    //   document.body.appendChild(link);
-    //   link.click();
-    //   document.body.removeChild(link);
-    // });
-  } else {
-    console.error("Passport images not available for download.");
-  }
-};
-  const handle = async (event, submissionId) => {
-    const newStatus = event.target.value;
+  const [categories, setCategories] = useState([]);
+  const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
+  const [showDeleteCategoryModal, setShowDeleteCategoryModal] = useState(false);
+  const [showEditCategoryModal, setShowEditCategoryModal] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategoryID, setSelectedCategoryID] = useState(null);
+  const token = localStorage.getItem('token');
 
-    // Update the status in the local state
-    setStatus((prevStatus) => ({
-      ...prevStatus,
-      [submissionId]: newStatus,
-    }));
-
-    try {
-      const response = await axios.put(
-        `http://localhost:8000/submissionFlight/update/${submissionId}`,
-        { statusFlight: newStatus },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log("Response after update request:", response);
-      console.log("Order updated successfully");
-     
-     
-    } catch (error) {
-      if (error.response) {
-        console.error("Server responded with an error:", error.response.data);
-        console.error("Status code:", error.response.status);
-        console.error("Headers:", error.response.headers);
-      } else if (error.request) {
-        console.error("No response received:", error.request);
-      } else {
-        console.error("Error setting up the request:", error.message);
-      }
-    }
-  }
+  const fetchCategories = () => {
+    axios.get("http://127.0.01:8000/category/getAll")
+      .then((response) => {
+        const categoriesData = response.data.data;
+        setCategories(categoriesData);
+      })
+      .catch((error) => {
+        console.error(`Error fetching categories' data: `, error);
+      });
+  };
 
   useEffect(() => {
-    const fetchSubmission = async () => {
-      try {
-        const response = await axios.get(
-          "http://127.0.01:8000/submissionFlight/getByUser/658f4da73a6841f3bcd1ba6f"
-        );
-        console.log("response.data", response.data.data);
-        if (response.data.success) {
-          setSubmission(response.data.data);
-        } else {
-          console.error("Error fetching products:", response.data.message);
-        }
-      } catch (error) {
-        console.error("Error fetching products:", error.message);
-      }
+    fetchCategories();
+  }, []);
+
+  const deleteCategory = async (categoryID) => {
+    try {
+      const response = await axios.delete(`${process.env.REACT_APP_API_URL}/category/delete/${categoryID}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      await fetchCategories();
+      closeDeleteCategoryModal();
+    } catch (error) {
+      console.error('Error deleting category data: ', error);
+      console.log('Error response:', error.response);
+    }
+  };
+  
+  const openDeleteCategoryModal = (categoryID) => {
+    setSelectedCategoryID(categoryID);
+    setShowDeleteCategoryModal(true);
+  };
+
+  const closeDeleteCategoryModal = () => {
+    setShowDeleteCategoryModal(false);
+  };
+
+  const openEditCategoryModal = (categoryID) => {
+    const selected = categories.find((category) => category._id === categoryID);
+    setSelectedCategory(selected);
+    setSelectedCategoryID(categoryID);
+    setShowEditCategoryModal(true);
+  };
+
+  const closeEditCategoryModal = () => {
+    setShowEditCategoryModal(false);
+  };
+
+  const AddCategoryButton = ({ openAddCategoryModal, closeAddCategoryModal, fetchCategories }) => {
+    const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
+
+    const handleOpen = () => {
+      setShowAddCategoryModal(true);
+      openAddCategoryModal();
     };
 
-    fetchSubmission();
-  }, []);
-  console.log("submission", submissions);
+    const handleClose = () => {
+      setShowAddCategoryModal(false);
+      closeAddCategoryModal();
+    };
+
+    return (
+      <div>
+        <Button
+          className="text-red-700 border border-red-700 px-4 py-2 mt-4 hover:bg-red-100"
+          onClick={handleOpen}
+        >
+          ADD CATEGORY
+        </Button>
+        <Modal
+          open={showAddCategoryModal}
+          onClose={handleClose}
+          closeAfterTransition
+          BackdropComponent={Backdrop}
+          BackdropProps={{
+            timeout: 500,
+          }}
+        >
+          <Fade in={showAddCategoryModal}>
+            <div className="bg-white p-6">
+              <Button onClick={handleClose} className="absolute top-0 right-0 m-4 px-2 py-1">
+                X
+              </Button>
+              <AddCategory fetchCategories={fetchCategories} closeAddCategoryModal={handleClose} />
+            </div>
+          </Fade>
+        </Modal>
+      </div>
+    );
+  };
+
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4, ml: 0 }}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={8} lg={9}>
-          
-         
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell>User Name</TableCell>
-                  <TableCell>Leaving From</TableCell>
-                  <TableCell>Going To</TableCell>
-                  <TableCell>Class Flight</TableCell>
-                  <TableCell>LeavingDate</TableCell>
-                  <TableCell>ArrivingDate</TableCell>
-                  <TableCell>Type</TableCell>
-                  <TableCell>Comment</TableCell>
-                  <TableCell>Applied Time</TableCell>
-                  <TableCell>Person</TableCell>
-                  <TableCell>Passport</TableCell>
-                  <TableCell align="right">Status</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {submissions.map((submission) => (
-                  <TableRow key={submission._id}>
-                    <TableCell>
-                      {submission.userId.firstName}
-                      {submission.userId.LastName}
-                    </TableCell>
-                    <TableCell>{submission.leavingFrom}</TableCell>
-                    <TableCell>{submission.goingTo}</TableCell>
-                    <TableCell>{submission.classFlight}</TableCell>
-                    <TableCell>
-                      {
-                        new Date(submission.arrivingDate)
-                          .toISOString()
-                          .split("T")[0]
-                      }
-                    </TableCell>
-                    <TableCell>
-                      {
-                        new Date(submission.leavingDate)
-                          .toISOString()
-                          .split("T")[0]
-                      }
-                    </TableCell>
-                    <TableCell>{submission.type}</TableCell>
-                    <TableCell>{submission.additionalComment}</TableCell>
-                    <TableCell>
-                      {
-                        new Date(submission.createdAt)
-                          .toISOString()
-                          .split("T")[0]
-                      }
-                    </TableCell>
+    <div>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Category </TableCell>
+              <TableCell>النوع</TableCell>
+              <TableCell>Requirements </TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {categories.map((category) => (
+              <TableRow key={category._id}>
+                <TableCell>{category.title}</TableCell>
+                <TableCell>{category.title_a}</TableCell>
+                <TableCell>
+                  <Button onClick={() => openEditCategoryModal(category._id)}>
+                    <img src={details} alt="details" />
+                  </Button>
+                  <Button onClick={() => openEditCategoryModal(category._id)}>
+                    <EditIcon />
+                  </Button>
+                  <Button onClick={() => openDeleteCategoryModal(category._id)}>
+                    <DeleteIcon />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
-                    {submission.person && submission.person.Adult > 0 && (
-                      <TableCell>
-                        Adult:{submission.person.Adult} Child:
-                        {submission.person.child} Infant:
-                        {submission.person.infant}
-                      </TableCell>
-                    )}
+      <AddCategoryButton
+        openAddCategoryModal={() => setShowAddCategoryModal(true)}
+        closeAddCategoryModal={() => setShowAddCategoryModal(false)}
+        fetchCategories={fetchCategories}
+      />
 
-                    {submission.passport && submission.passport.length > 0 && (
-                      <TableCell>
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            console.log("omar"); handleDownloadImages(
-                              submission.passport,
-                              "download"
-                            )}
-                          
-                          }
-                        >
-                          Download Passport
-                        </button>
-                      </TableCell>
-                    )}
+      <Modal open={showDeleteCategoryModal} onClose={closeDeleteCategoryModal}>
+        <DeleteCategory
+          fetchCategories={fetchCategories}
+          closeDeleteCategoryModal={closeDeleteCategoryModal}
+          deleteCategory={deleteCategory}
+          categoryID={selectedCategoryID}
+        />
+      </Modal>
 
-                    <TableCell align="right">
-                      <Select
-                        displayEmpty
-                        value={
-                          status[submission._id] || submission.statusFlight
-                        }
-                        onChange={(event) => handle(event, submission._id)}
-                        input={<OutlinedInput />}
-                      >
-                        <MenuItem value={submission.statusFlight} selected>
-                          {submission.statusFlight}
-                        </MenuItem>
-                        <MenuItem value="request">request</MenuItem>
-                        <MenuItem value="accept">accept</MenuItem>
-                      </Select>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          
-        </Grid>
-      </Grid>
-    </Container>
+      <Modal open={showEditCategoryModal} onClose={closeEditCategoryModal}>
+        <EditCategory
+          fetchCategories={fetchCategories}
+          closeEditCategoryModal={closeEditCategoryModal}
+          categoryID={selectedCategoryID}
+          category={selectedCategory}
+        />
+      </Modal>
+    </div>
   );
 };
 
-export default CategoryDash
+export default CategoryDash;

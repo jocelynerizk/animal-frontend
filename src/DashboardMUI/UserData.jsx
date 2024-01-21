@@ -21,7 +21,7 @@ const CompanyDash = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("http://127.0.01:8000/user/getAll");
+        const response = await axios.get("https://animalbackend1.onrender.com/user/getAll");
         console.log("response.data", response.data.data);
         if (response.data.success) {
           setDataUser(response.data.data);
@@ -53,7 +53,7 @@ const CompanyDash = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-            {companyUsers.map((data) => (
+              {companyUsers.map((data) => (
                 <TableRow key={data._id}>
                   <TableCell>
                     {data.firstName} {data.LastName}
@@ -64,22 +64,22 @@ const CompanyDash = () => {
                     {new Date(data.createdAt).toISOString().split("T")[0]}
                   </TableCell>
                   <TableCell>
-                  <Link to="/edit-user">
-                        <Button >
-                          <img src= {details} alt="Details" />
-                        </Button>
-                        </Link>
+                    <Link to="/edit-user">
+                      <Button >
+                        <img src={details} alt="Details" />
+                      </Button>
+                    </Link>
 
-                      </TableCell>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
           <Link to="/add-user">
-          <Button>
-            <img src={nouveau} alt="Nouveau" />
-          </Button>
-        </Link>
+            <Button>
+              <img src={nouveau} alt="Nouveau" />
+            </Button>
+          </Link>
         </Grid>
       </Grid>
     </Container>

@@ -30,7 +30,7 @@ const CompanyDash = () => {
   const [showSearch, setShowSearch] = useState(false);
 
   const fetchCustomers = () => {
-    axios.get("http://127.0.01:8000/user/getAll")
+    axios.get("https://animalbackend1.onrender.com/user/getAll")
       .then((response) => {
         setCustomers(response.data.data);
         response.data.data.forEach((user) => {
@@ -79,7 +79,7 @@ const CompanyDash = () => {
 
   const countOrderPerCustomer = async (userID) => {
     try {
-      const response = await axios.get("http://127.0.01:8000/car/getDetails/${userID}");
+      const response = await axios.get("https://animalbackend1.onrender.com/car/getDetails/${userID}");
       setOrdersPerUser((prevOrdersPerUser) => ({
         ...prevOrdersPerUser,
         [userID]: response.data.data.length,
@@ -163,6 +163,24 @@ const CompanyDash = () => {
           <TableBody>
             {showSearch
               ? resultSearch.map((customer) => (
+                <TableRow key={customer._id} style={{ borderBottom: '1px solid #ccc' }}>
+                  <TableCell>{`${customer.firstName} ${customer.lastName}`}</TableCell>
+                  <TableCell>{customer.email}</TableCell>
+                  <TableCell>{ordersPerUser[customer._id] || 0}</TableCell>
+                  <TableCell>
+                    <IconButton
+                      onClick={() => openViewCustomerModal(customer._id)}
+                    >
+                      <Typography variant="body2" style={{ color: 'red' }}>
+                        View Details
+                      </Typography>
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))
+              : customers
+                .filter((customer) => customer.role === 'client')
+                .map((customer) => (
                   <TableRow key={customer._id} style={{ borderBottom: '1px solid #ccc' }}>
                     <TableCell>{`${customer.firstName} ${customer.lastName}`}</TableCell>
                     <TableCell>{customer.email}</TableCell>
@@ -177,25 +195,7 @@ const CompanyDash = () => {
                       </IconButton>
                     </TableCell>
                   </TableRow>
-                ))
-              : customers
-                  .filter((customer) => customer.role === 'client')
-                  .map((customer) => (
-                    <TableRow key={customer._id} style={{ borderBottom: '1px solid #ccc' }}>
-                      <TableCell>{`${customer.firstName} ${customer.lastName}`}</TableCell>
-                      <TableCell>{customer.email}</TableCell>
-                      <TableCell>{ordersPerUser[customer._id] || 0}</TableCell>
-                      <TableCell>
-                        <IconButton
-                          onClick={() => openViewCustomerModal(customer._id)}
-                        >
-                          <Typography variant="body2" style={{ color: 'red' }}>
-                            View Details
-                          </Typography>
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                ))}
           </TableBody>
         </Table>
       </div>

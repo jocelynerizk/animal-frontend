@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import { Link } from 'react-router-dom'; 
+import { Link } from 'react-router-dom';
 
 import {
   Table,
@@ -32,7 +32,7 @@ const CategoryDash = () => {
   const token = localStorage.getItem('token');
 
   const fetchCategories = () => {
-    axios.get("http://127.0.01:8000/category/getAll")
+    axios.get("https://animalbackend1.onrender.com/category/getAll")
       .then((response) => {
         const categoriesData = response.data.data;
         setCategories(categoriesData);
@@ -95,12 +95,12 @@ const CategoryDash = () => {
       closeAddCategoryModal();
     };
 
- 
-  
+
+
     return (
       <div>
         <Button color="primary"
-        
+
           onClick={handleOpen}
         >
           ADD CATEGORY
@@ -145,9 +145,9 @@ const CategoryDash = () => {
                 <TableCell>{category.title}</TableCell>
                 <TableCell>{category.title_a}</TableCell>
                 <TableCell>
-                <Link to={`/RequirementDash/${category._id}`}>
-                     <img src={details} alt="details" />
-                </Link>
+                  <Link to={`/RequirementDash/${category._id}`}>
+                    <img src={details} alt="details" />
+                  </Link>
                   <Button onClick={() => openEditCategoryModal(category._id)}>
                     <EditIcon />
                   </Button>
@@ -162,7 +162,7 @@ const CategoryDash = () => {
         </Table>
       </TableContainer>
 
-      <AddCategoryButton 
+      <AddCategoryButton
         openAddCategoryModal={() => setShowAddCategoryModal(true)}
         closeAddCategoryModal={() => setShowAddCategoryModal(false)}
         fetchCategories={fetchCategories}

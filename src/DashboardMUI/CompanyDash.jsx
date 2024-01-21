@@ -51,8 +51,8 @@ const CompanyDash = () => {
   const toggleSort = (field) => {
     const sortedData = [...customers].sort((a, b) => {
       if (field === 'name') {
-        const nameA = `${a.fullName.firstName} ${a.fullName.lastName}`.toLowerCase();
-        const nameB = `${b.fullName.firstName} ${b.fullName.lastName}`.toLowerCase();
+        const nameA = `${a.firstName} ${a.lastName}`.toLowerCase();
+        const nameB = `${b.firstName} ${b.lastName}`.toLowerCase();
 
         if (nameA < nameB) return sortOrder ? -1 : 1;
         if (nameA > nameB) return sortOrder ? 1 : -1;
@@ -96,11 +96,11 @@ const CompanyDash = () => {
     const result = customers
       .map((customer) => {
         const userFirstName = (
-          (customer.fullName && customer.fullName.firstName) ||
+          (customer.firstName) ||
           ''
         ).toLowerCase();
         const userLastName = (
-          (customer.fullName && customer.fullName.lastName) ||
+          (customer.lastName) ||
           ''
         ).toLowerCase();
 
@@ -156,7 +156,7 @@ const CompanyDash = () => {
             <TableRow>
               <TableCell onClick={() => toggleSort('name')}>Name {sortOrder ? '↓' : '↑'}</TableCell>
               <TableCell onClick={() => toggleSort('email')}>Email {sortOrder ? '↓' : '↑'}</TableCell>
-              <TableCell onClick={() => toggleSort('orders')}>Number of orders {sortOrder ? '↓' : '↑'}</TableCell>
+              <TableCell onClick={() => toggleSort('orders')}>Number of Cars {sortOrder ? '↓' : '↑'}</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
@@ -164,7 +164,7 @@ const CompanyDash = () => {
             {showSearch
               ? resultSearch.map((customer) => (
                   <TableRow key={customer._id} style={{ borderBottom: '1px solid #ccc' }}>
-                    <TableCell>{`${customer.fullName.firstName} ${customer.fullName.lastName}`}</TableCell>
+                    <TableCell>{`${customer.firstName} ${customer.lastName}`}</TableCell>
                     <TableCell>{customer.email}</TableCell>
                     <TableCell>{ordersPerUser[customer._id] || 0}</TableCell>
                     <TableCell>
@@ -179,10 +179,10 @@ const CompanyDash = () => {
                   </TableRow>
                 ))
               : customers
-                  .filter((customer) => customer.role === 'company')
+                  .filter((customer) => customer.role === 'client')
                   .map((customer) => (
                     <TableRow key={customer._id} style={{ borderBottom: '1px solid #ccc' }}>
-                      <TableCell>{`${customer.fullName.firstName} ${customer.fullName.lastName}`}</TableCell>
+                      <TableCell>{`${customer.firstName} ${customer.lastName}`}</TableCell>
                       <TableCell>{customer.email}</TableCell>
                       <TableCell>{ordersPerUser[customer._id] || 0}</TableCell>
                       <TableCell>

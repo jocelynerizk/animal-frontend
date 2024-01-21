@@ -69,7 +69,7 @@ export default function SignIn() {
         localStorage.setItem("role", data.data.role);
 
         if (data.data.role === "admin") {
-          navigate("/AdminDashboard");
+          navigate("/*");
         }
         if (data.data.role === "client") {
           navigate("/");

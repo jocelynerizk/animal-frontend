@@ -36,7 +36,7 @@ const RequirementDash = () => {
       const response = await axios.get(`http://127.0.0.1:8000/requirement/getAllByCategoryID/${categoryId}`);
       const requirementsData = response.data.data;
       setRequirements(requirementsData);
-      setTitle(requirementsData.length > 0 ? requirementsData[0].title : '');
+      setTitle(requirementsData.length > 0 ? requirementsData[0].catID.title : '');
       console.log('Data from server:', requirementsData);
     } catch (error) {
       console.error(`Error fetching requirements' data: `, error);
@@ -120,7 +120,7 @@ const RequirementDash = () => {
 
   return (
     <div>
-      <h1 style={{ color: 'aqua', textShadow: '2px 2px blue', textAlign: 'center' }}>Requirements</h1>
+      <h1 style={{ color: 'aqua', textShadow: '2px 2px blue', textAlign: 'center' }}>{title}</h1>
 
       <TableContainer component={Paper}>
         <Table>

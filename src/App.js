@@ -14,6 +14,8 @@ import SignUP from "./Pages/SignUp";
 import DashBoard from "./Pages/Dashboard"
 import AddUser from "./Dashcomponents/DashModals/AddUser"
 import EditUser from "./Dashcomponents/DashModals/EditUser"
+import RequirementDash from "./DashboardMUI/RequirementDash"
+
 
 
 const theme = createTheme();
@@ -36,6 +38,7 @@ const App = () => {
           <Route path="/add-user" element={<AddUser />} />
           <Route path="/edit-user" element={<EditUser />} />
           <Route path="/*" element={<DashBoard />} />
+          <Route path="/RequirementDash/:categoryId" element={<RequirementDash />} />
 
         </Routes>
         </ThemeProvider>

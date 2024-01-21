@@ -1,217 +1,243 @@
-import React from 'react'
-import Container from "@mui/material/Container";
-import { Grid, Paper } from "@mui/material";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import {
+  Button,
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TableRow,
-  Select,
+  Paper,
+  Typography,
+  Modal,
+  Backdrop,
+  Fade,
+  TextField,
   MenuItem,
-  OutlinedInput,
-} from "@mui/material";
-import { useEffect } from "react";
-import axios from "axios";
-  const token = localStorage.getItem("token");
-   
+  Menu,
+} from '@mui/material';
+import { ChevronDown as ChevronDownIcon } from '@mui/icons-material';
+import AddCar from '../Dashcomponents/DashModals/AddCar';
+import DeleteCar from '../Dashcomponents/DashModals/DeleteCar';
+import EditCar from '../Dashcomponents/DashModals/EditCar';
+import DeleteCarImage from '../Dashcomponents/DashModals/DeleteCarImage';
+
 const CarDash = () => {
-  const [submissions, setSubmission] = React.useState([]);
-  const [status,setStatus]=React.useState("")
-  const handleDownloadImages = (imageUrls, downloadFileName) => {
-  console.log("imageurls",imageUrls)
-  if (imageUrls && imageUrls.length > 0) {
-    const links = imageUrls.map((imageUrl, index) => ({
-      href: imageUrl,
-      download: `${downloadFileName}_${index + 1}.png`,
-    }));
-    console.log("links",links)
-  //  const link = document.createElement("a");
-    const anchor = document.createElement("a");
-    anchor.href = links[0].href;
-    anchor.target = "_blank";
-    anchor.download = links[0].download; // Set the desired file name
-    document.body.appendChild(anchor);
-    anchor.click();
-    document.body.removeChild(anchor);
-    // Create links and append them to the document
-    // links.forEach((linkInfo) => {
-   
-    //   link.href = linkInfo.href;
-    //   link.target = "_blank";
-    //   link.download = linkInfo.download;
-    //   document.body.appendChild(link);
-    //   link.click();
-    //   document.body.removeChild(link);
-    // });
-  } else {
-    console.error("Passport images not available for download.");
-  }
-};
-  const handle = async (event, submissionId) => {
-    const newStatus = event.target.value;
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState({});
+  const [showAddProductModal, setShowAddProductModal] = useState(false);
+  const [showDeleteProductModal, setShowDeleteProductModal] = useState(false);
+  const [showEditProductModal, setShowEditProductModal] = useState(false);
+  const [selectedProductID, setSelectedProductID] = useState(null);
+  const [filterShow, setFilterShow] = useState(false);
+  const [showFilterItem, setShowFilterItem] = useState([]);
+  const [searchName, setSearchName] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
+  const [sortOrder, setSortOrder] = useState(true);
 
-    // Update the status in the local state
-    setStatus((prevStatus) => ({
-      ...prevStatus,
-      [submissionId]: newStatus,
-    }));
-
-    try {
-      const response = await axios.put(
-        `http://localhost:8000/submissionFlight/update/${submissionId}`,
-        { statusFlight: newStatus },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log("Response after update request:", response);
-      console.log("Order updated successfully");
-     
-     
-    } catch (error) {
-      if (error.response) {
-        console.error("Server responded with an error:", error.response.data);
-        console.error("Status code:", error.response.status);
-        console.error("Headers:", error.response.headers);
-      } else if (error.request) {
-        console.error("No response received:", error.request);
-      } else {
-        console.error("Error setting up the request:", error.message);
-      }
-    }
-  }
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
-    const fetchSubmission = async () => {
-      try {
-        const response = await axios.get(
-          "http://127.0.01:8000/submissionFlight/getByUser/658f4da73a6841f3bcd1ba6f"
-        );
-        console.log("response.data", response.data.data);
-        if (response.data.success) {
-          setSubmission(response.data.data);
-        } else {
-          console.error("Error fetching products:", response.data.message);
-        }
-      } catch (error) {
-        console.error("Error fetching products:", error.message);
-      }
-    };
-
-    fetchSubmission();
+    fetchProducts();
   }, []);
-  console.log("submission", submissions);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/car/getAll`);
+      setProducts(response.data.data);
+      const categoryIds = response.data.data.map((product) => product.categoryID);
+      categoryIds.forEach(fetchCategoryName);
+    } catch (error) {
+      console.error(`Error fetching products' data: `, error);
+    }
+  };
+
+  const fetchCategoryName = async (ID) => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/category/getbyID/${ID}`);
+      const { name } = response.data.data;
+      setCategories((prevCategories) => ({
+        ...prevCategories,
+        [ID]: name,
+      }));
+    } catch (error) {
+      console.error(`Error fetching categories' data: `, error);
+    }
+  };
+
+  const toggleSort = (field) => {
+    // Your sorting logic here
+  };
+
+  const openAddProductModal = () => {
+    setShowAddProductModal(true);
+  };
+
+  const closeAddProductModal = () => {
+    setShowAddProductModal(false);
+  };
+
+  const openDeleteProductModal = (productID) => {
+    setSelectedProductID(productID);
+    setShowDeleteProductModal(true);
+  };
+
+  const closeDeleteProductModal = () => {
+    setShowDeleteProductModal(false);
+  };
+
+  const editProduct = async (productID) => {
+    // Your edit product logic here
+  };
+
+  const openEditProductModal = (productID) => {
+    setSelectedProductID(productID);
+    setShowEditProductModal(true);
+  };
+
+  const closeEditProductModal = () => {
+    setShowEditProductModal(false);
+  };
+
+  const sortOptions = [
+    { name: 'Clear filter', href: '#', current: false },
+    { name: 'Available', href: '#', current: false },
+    { name: 'Sold out', href: '#', current: false },
+    { name: 'Discounted', href: '#', current: false },
+  ];
+
+  const selectedChangeFilter = (value) => {
+    // Your filter logic here
+  };
+
+  const searchUser = (e) => {
+    e.preventDefault();
+    // Your search logic here
+  };
+
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4, ml: 0 }}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={8} lg={9}>
-          
-         
-            <Table size="small">
+    <div>
+      <form onSubmit={searchUser}>
+        {/* Your search form */}
+      </form>
+
+      {filterShow || showSearch ? (
+        <div>
+          <TableContainer component={Paper}>
+            <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>User Name</TableCell>
-                  <TableCell>Leaving From</TableCell>
-                  <TableCell>Going To</TableCell>
-                  <TableCell>Class Flight</TableCell>
-                  <TableCell>LeavingDate</TableCell>
-                  <TableCell>ArrivingDate</TableCell>
-                  <TableCell>Type</TableCell>
-                  <TableCell>Comment</TableCell>
-                  <TableCell>Applied Time</TableCell>
-                  <TableCell>Person</TableCell>
-                  <TableCell>Passport</TableCell>
-                  <TableCell align="right">Status</TableCell>
+                  <TableCell onClick={() => toggleSort('category')}>Category &#8597;</TableCell>
+                  <TableCell onClick={() => toggleSort('name')}>Name &#8597;</TableCell>
+                  <TableCell>Thumbnail</TableCell>
+                  <TableCell onClick={() => toggleSort('price')}>Price &#8597;</TableCell>
+                  <TableCell onClick={() => toggleSort('discountPercentage')}>Discounted &#8597;</TableCell>
+                  <TableCell>Status</TableCell>
+                  <TableCell>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {submissions.map((submission) => (
-                  <TableRow key={submission._id}>
+                {showFilterItem.map((product) => (
+                  <TableRow key={product._id}>
+                    <TableCell>{categories[product.categoryID]}</TableCell>
+                    <TableCell>{product.name}</TableCell>
                     <TableCell>
-                      {submission.userId.firstName}
-                      {submission.userId.LastName}
+                      <img src={product.images[0]} alt="product" />
                     </TableCell>
-                    <TableCell>{submission.leavingFrom}</TableCell>
-                    <TableCell>{submission.goingTo}</TableCell>
-                    <TableCell>{submission.classFlight}</TableCell>
+                    <TableCell>{product.price}</TableCell>
+                    <TableCell>{product.discountPercentage !== 0 ? `${product.discountPercentage}%` : '-'}</TableCell>
+                    <TableCell>{product.status}</TableCell>
                     <TableCell>
-                      {
-                        new Date(submission.arrivingDate)
-                          .toISOString()
-                          .split("T")[0]
-                      }
-                    </TableCell>
-                    <TableCell>
-                      {
-                        new Date(submission.leavingDate)
-                          .toISOString()
-                          .split("T")[0]
-                      }
-                    </TableCell>
-                    <TableCell>{submission.type}</TableCell>
-                    <TableCell>{submission.additionalComment}</TableCell>
-                    <TableCell>
-                      {
-                        new Date(submission.createdAt)
-                          .toISOString()
-                          .split("T")[0]
-                      }
-                    </TableCell>
-
-                    {submission.person && submission.person.Adult > 0 && (
-                      <TableCell>
-                        Adult:{submission.person.Adult} Child:
-                        {submission.person.child} Infant:
-                        {submission.person.infant}
-                      </TableCell>
-                    )}
-
-                    {submission.passport && submission.passport.length > 0 && (
-                      <TableCell>
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            console.log("omar"); handleDownloadImages(
-                              submission.passport,
-                              "download"
-                            )}
-                          
-                          }
-                        >
-                          Download Passport
-                        </button>
-                      </TableCell>
-                    )}
-
-                    <TableCell align="right">
-                      <Select
-                        displayEmpty
-                        value={
-                          status[submission._id] || submission.statusFlight
-                        }
-                        onChange={(event) => handle(event, submission._id)}
-                        input={<OutlinedInput />}
-                      >
-                        <MenuItem value={submission.statusFlight} selected>
-                          {submission.statusFlight}
-                        </MenuItem>
-                        <MenuItem value="request">request</MenuItem>
-                        <MenuItem value="accept">accept</MenuItem>
-                      </Select>
+                      <Button onClick={() => openEditProductModal(product._id)}>
+                        <img src="../Images/dashboardIcons/edit.png" alt="edit" />
+                      </Button>
+                      <Button onClick={() => openDeleteProductModal(product._id)}>
+                        <img src="../Images/dashboardIcons/delete.png" alt="delete" />
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
-          
-        </Grid>
-      </Grid>
-    </Container>
+          </TableContainer>
+
+          {/* Modals */}
+          {showDeleteProductModal && (
+            <Modal open={showDeleteProductModal} onClose={closeDeleteProductModal}>
+              {/* ... (Delete Product Modal content) */}
+            </Modal>
+          )}
+          {showAddProductModal && (
+            <Modal open={showAddProductModal} onClose={closeAddProductModal}>
+              <AddCar onClose={closeAddProductModal} />
+            </Modal>
+          )}
+          {showEditProductModal && (
+            <Modal open={showEditProductModal} onClose={closeEditProductModal}>
+              <EditCar productID={selectedProductID} onClose={closeEditProductModal} />
+            </Modal>
+          )}
+        </div>
+      ) : (
+        <div>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell onClick={() => toggleSort('category')}>Category &#8597;</TableCell>
+                  <TableCell onClick={() => toggleSort('name')}>Name &#8597;</TableCell>
+                  <TableCell>Thumbnail</TableCell>
+                  <TableCell onClick={() => toggleSort('price')}>Price &#8597;</TableCell>
+                  <TableCell onClick={() => toggleSort('discountPercentage')}>Discounted &#8597;</TableCell>
+                  <TableCell>Status</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {products.map((product) => (
+                  <TableRow key={product._id}>
+                    <TableCell>{categories[product.categoryID]}</TableCell>
+                    <TableCell>{product.name}</TableCell>
+                    <TableCell>
+                      <img src={product.images[0]} alt="product" />
+                    </TableCell>
+                    <TableCell>{product.price}$</TableCell>
+                    <TableCell>{product.discountPercentage !== 0 ? `${product.discountPercentage}%` : '-'}</TableCell>
+                    <TableCell>{product.status}</TableCell>
+                    <TableCell>
+                      <Button onClick={() => openEditProductModal(product._id)}>
+                        <img src="../Images/dashboardIcons/edit.png" alt="edit" />
+                      </Button>
+                      <Button onClick={() => openDeleteProductModal(product._id)}>
+                        <img src="../Images/dashboardIcons/delete.png" alt="delete" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          {/* Modals */}
+          {showDeleteProductModal && (
+            <Modal open={showDeleteProductModal} onClose={closeDeleteProductModal}>
+              {/* ... (Delete Product Modal content) */}
+            </Modal>
+          )}
+          {showAddProductModal && (
+            <Modal open={showAddProductModal} onClose={closeAddProductModal}>
+              <AddCar onClose={closeAddProductModal} />
+            </Modal>
+          )}
+          {showEditProductModal && (
+            <Modal open={showEditProductModal} onClose={closeEditProductModal}>
+              <EditCar productID={selectedProductID} onClose={closeEditProductModal} />
+            </Modal>
+          )}
+        </div>
+      )}
+    </div>
   );
 };
 
-export default CarDash
+export default CarDash;

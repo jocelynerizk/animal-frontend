@@ -124,7 +124,6 @@ function EditUser({ companyUsers, userID }) {
     try {
       await editUser(userID, updatedFields);
       
-      fetchTeam();
     } catch (error) {
       setError(error.response.data.error);
     }

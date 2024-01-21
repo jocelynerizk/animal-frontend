@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
+import { Link } from 'react-router-dom'; 
+
 import {
   Table,
   TableBody,
@@ -17,8 +19,6 @@ import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon } from '@materia
 import AddCategory from "../Dashcomponents/DashModals/AddCategory";
 import DeleteCategory from "../Dashcomponents/DashModals/DeleteCategory";
 import EditCategory from "../Dashcomponents/DashModals/EditCategory";
-import { Link } from 'react-router-dom';
-import nouveau from "../images/add.png";
 import details from "../images/details.png";
 
 const CategoryDash = () => {
@@ -28,6 +28,7 @@ const CategoryDash = () => {
   const [showEditCategoryModal, setShowEditCategoryModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedCategoryID, setSelectedCategoryID] = useState(null);
+
   const token = localStorage.getItem('token');
 
   const fetchCategories = () => {
@@ -60,7 +61,7 @@ const CategoryDash = () => {
       console.log('Error response:', error.response);
     }
   };
-  
+
   const openDeleteCategoryModal = (categoryID) => {
     setSelectedCategoryID(categoryID);
     setShowDeleteCategoryModal(true);
@@ -94,10 +95,12 @@ const CategoryDash = () => {
       closeAddCategoryModal();
     };
 
+ 
+  
     return (
       <div>
-        <Button
-          className="text-red-700 border border-red-700 px-4 py-2 mt-4 hover:bg-red-100"
+        <Button color="primary"
+        
           onClick={handleOpen}
         >
           ADD CATEGORY
@@ -142,9 +145,9 @@ const CategoryDash = () => {
                 <TableCell>{category.title}</TableCell>
                 <TableCell>{category.title_a}</TableCell>
                 <TableCell>
-                  <Button onClick={() => openEditCategoryModal(category._id)}>
-                    <img src={details} alt="details" />
-                  </Button>
+                <Link to={`/RequirementDash/${category._id}`}>
+                     <img src={details} alt="details" />
+                </Link>
                   <Button onClick={() => openEditCategoryModal(category._id)}>
                     <EditIcon />
                   </Button>
@@ -152,13 +155,14 @@ const CategoryDash = () => {
                     <DeleteIcon />
                   </Button>
                 </TableCell>
+
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
 
-      <AddCategoryButton
+      <AddCategoryButton 
         openAddCategoryModal={() => setShowAddCategoryModal(true)}
         closeAddCategoryModal={() => setShowAddCategoryModal(false)}
         fetchCategories={fetchCategories}

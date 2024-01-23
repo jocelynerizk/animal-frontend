@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import CompanyCars from '../Dashcomponents/DashModals/CompanyCars';
 import {
   Table,
   TableBody,
@@ -19,7 +19,6 @@ import ViewCompanies from '../Dashcomponents/DashModals/ViewCompanies';
 import car from "../images/car.png";
 
 const CompanyDash = () => {
-  const { ownerId } = useParams();
   const [customers, setCustomers] = useState([]);
   const [showViewCustomerModal, setShowViewCustomerModal] = useState(false);
   const [selectedCustomerID, setSelectedCustomerID] = useState(null);
@@ -27,6 +26,7 @@ const CompanyDash = () => {
   const [resultSearch, setResultSearch] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
   const [sortOrder, setSortOrder] = useState(true);
+  const [showcarscompany, setShowcarscompany] = useState(false);
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -111,39 +111,44 @@ const CompanyDash = () => {
           </Button>
         </div>
       </form>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell onClick={() => toggleSort('name')}>Name {sortOrder ? '↓' : '↑'}</TableCell>
-              <TableCell onClick={() => toggleSort('email')}>Email {sortOrder ? '↓' : '↑'}</TableCell>
-              <TableCell>Phone Number</TableCell>
-              <TableCell>Cars</TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {(showSearch ? resultSearch : customers).map((customer) => (
-              <TableRow key={customer._id} className="border-b">
-                <TableCell>{`${customer.firstName} ${customer.lastName}`}</TableCell>
-                <TableCell>{customer.email}</TableCell>
-                <TableCell>{customer.phoneNumber}</TableCell>
-                <TableCell>
-                  <Link to={`/companycars/${customer._id}`}>
-                    <img src={car} alt="car" />
-                  </Link>
-                </TableCell>
-                <TableCell
-                  className="italic text-red-700 hover:underline"
-                  onClick={() => openViewCustomerModal(customer._id)}
-                >
-                  View Details
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+
+  <TableContainer component={Paper}>
+  {!showcarscompany ? (
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell onClick={() => toggleSort('name')}>Name {sortOrder ? '↓' : '↑'}</TableCell>
+          <TableCell onClick={() => toggleSort('email')}>Email {sortOrder ? '↓' : '↑'}</TableCell>
+          <TableCell>Phone Number</TableCell>
+          <TableCell>Cars</TableCell>
+          <TableCell></TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {(showSearch ? resultSearch : customers).map((customer) => (
+          <TableRow key={customer._id} className="border-b">
+            <TableCell>{`${customer.firstName} ${customer.lastName}`}</TableCell>
+            <TableCell>{customer.email}</TableCell>
+            <TableCell>{customer.phoneNumber}</TableCell>
+            <TableCell>
+              <Link to={`/companycars/${customer._id}`}>
+                <img src={car} alt="car" />
+              </Link>
+            </TableCell>
+            <TableCell
+              className="italic text-red-700 hover:underline"
+              onClick={() => openViewCustomerModal(customer._id)}
+            >
+              View Details
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  ) : (
+    <CompanyCars />
+  )}
+</TableContainer>
 
       <Modal
         open={showViewCustomerModal}

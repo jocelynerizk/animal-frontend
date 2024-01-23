@@ -22,7 +22,7 @@ import DeleteCar from "./DeleteCar";
 import EditCar from "./EditCar";
 
 const CompanyCars = () => {
-  const { ownerid } = useParams();
+  const {ownerid} = useParams();
   const [cars, setCars] = useState([]);
   const [title, setTitle] = useState('');
   const [showAddCarModal, setShowAddCarModal] = useState(false);
@@ -32,11 +32,10 @@ const CompanyCars = () => {
 
   const fetchCars = async () => {
     try {
-      const response = await axios.get("http://127.0.01:8000car/getDetails/${ownerid}");
+      const response = await axios.get(`http://127.0.0.1:8000/car/getDetails/${ownerid}`);
       const carsData = response.data.data;
-      console.log(carsData)
-      console.log('Owner ID:', ownerid);
-      console.log('Cars:', cars);
+      console.log("car data",carsData[0].catID.title)
+
       setCars(carsData);
       setTitle(carsData.length > 0 ? carsData[0].catID.title : '');
     } catch (error) {
@@ -80,11 +79,11 @@ const CompanyCars = () => {
     const handleOpen = () => {
       setShowAddCarModal(true);
     };
-
+  
     const handleClose = () => {
       setShowAddCarModal(false);
     };
-
+  
     return (
       <div>
         <Button color="primary" onClick={handleOpen}>
@@ -105,7 +104,7 @@ const CompanyCars = () => {
                 X
               </Button>
               <AddCar
-                ownerId={ownerId}
+                ownerId={ownerid}
                 fetchCars={fetchCars}
                 closeAddCarModal={handleClose}
               />

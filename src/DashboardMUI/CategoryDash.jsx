@@ -32,7 +32,7 @@ const CategoryDash = () => {
   const token = localStorage.getItem('token');
 
   const fetchCategories = () => {
-    axios.get("https://animalbackend1.onrender.com/category/getAll")
+    axios.get(`${process.env.REACT_APP_API_URL}/category/getAll`)
       .then((response) => {
         const categoriesData = response.data.data;
         setCategories(categoriesData);

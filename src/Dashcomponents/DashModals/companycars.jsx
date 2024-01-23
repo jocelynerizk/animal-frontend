@@ -34,7 +34,7 @@ const CompanyCars = () => {
     try {
       const response = await axios.get(`http://127.0.0.1:8000/car/getDetails/${ownerid}`);
       const carsData = response.data.data;
-      console.log("car data",carsData[0].catID.title)
+      console.log("car data",carsData)
 
       setCars(carsData);
       setTitle(carsData.length > 0 ? carsData[0].catID.title : '');
@@ -130,7 +130,7 @@ const CompanyCars = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {cars.map((car) => (
+            {cars?.map((car) => (
               <TableRow key={car._id}>
                 <TableCell>{car.immatricule}</TableCell>
                 <TableCell>{car.title}</TableCell>

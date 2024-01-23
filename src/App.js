@@ -37,7 +37,7 @@ const App = () => {
           <Route path="/edit-user" element={<EditUser />} />
           <Route path="/*" element={<DashBoard />} />
           <Route path="/RequirementDash/:categoryId" element={<RequirementDash />} />
-          <Route path="/CompanyCars/:ownerId" element={<CompanyCars />} />
+          <Route path="/CompanyCars/:ownerid" element={<CompanyCars />} />
 
         </Routes>
         </ThemeProvider>

@@ -1,0 +1,24 @@
+* {
+    font-family: "Playfair Display";
+}
+
+.dashboard-flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.dashboard-sidebar {
+    flex: 0 0 180px;
+}
+
+.dashboard-main {
+    flex: 1;
+    padding: 20px;
+    margin-top: 45px;
+}
+
+table img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}

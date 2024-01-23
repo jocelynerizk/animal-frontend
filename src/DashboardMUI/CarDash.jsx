@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
-  Button,
   Table,
   TableBody,
   TableCell,
@@ -9,235 +8,142 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Typography,
-  Modal,
-  Backdrop,
-  Fade,
   TextField,
-  MenuItem,
-  Menu,
+  Button,
+  Modal,
+  styled, // Import the styled utility from @mui/system
 } from '@mui/material';
-import { ChevronDown as ChevronDownIcon } from '@mui/icons-material';
-import AddCar from '../Dashcomponents/DashModals/AddCar';
-import DeleteCar from '../Dashcomponents/DashModals/DeleteCar';
-import EditCar from '../Dashcomponents/DashModals/EditCar';
-import DeleteCarImage from '../Dashcomponents/DashModals/DeleteCarImage';
+import { Link } from 'react-router-dom';
+import car from '../images/car.png';
 
-const CarDash = () => {
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState({});
-  const [showAddProductModal, setShowAddProductModal] = useState(false);
-  const [showDeleteProductModal, setShowDeleteProductModal] = useState(false);
-  const [showEditProductModal, setShowEditProductModal] = useState(false);
-  const [selectedProductID, setSelectedProductID] = useState(null);
-  const [filterShow, setFilterShow] = useState(false);
-  const [showFilterItem, setShowFilterItem] = useState([]);
+// Use the styled utility to create a styled component
+const MyPaper = styled(Paper)({
+  position: 'absolute',
+  width: 400,
+  backgroundColor: '#fff', // Replace with your desired background color
+  border: '2px solid #000',
+  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+  padding: '16px',
+});
+
+const CompanyDash = () => {
+  const [customers, setCustomers] = useState([]);
+  const [showViewCustomerModal, setShowViewCustomerModal] = useState(false);
+  const [selectedCustomerID, setSelectedCustomerID] = useState(null);
   const [searchName, setSearchName] = useState('');
+  const [resultSearch, setResultSearch] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
   const [sortOrder, setSortOrder] = useState(true);
 
-  const token = localStorage.getItem('token');
-
   useEffect(() => {
-    fetchProducts();
+    const fetchCustomers = async () => {
+      try {
+        const response = await axios.get("http://127.0.01:8000/car/getAll");
+        setCustomers(response.data.data);
+      } catch (error) {
+        console.error(`Error fetching customers' data: `, error);
+      }
+    };
+
+    fetchCustomers();
   }, []);
 
-  const fetchProducts = async () => {
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/car/getAll`);
-      setProducts(response.data.data);
-      const categoryIds = response.data.data.map((product) => product.categoryID);
-      categoryIds.forEach(fetchCategoryName);
-    } catch (error) {
-      console.error(`Error fetching products' data: `, error);
-    }
-  };
-
-  const fetchCategoryName = async (ID) => {
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/category/getbyID/${ID}`);
-      const { name } = response.data.data;
-      setCategories((prevCategories) => ({
-        ...prevCategories,
-        [ID]: name,
-      }));
-    } catch (error) {
-      console.error(`Error fetching categories' data: `, error);
-    }
-  };
-
   const toggleSort = (field) => {
-    // Your sorting logic here
-  };
+    const sortedData = [...customers].sort((a, b) => {
+      const compareValue = field === 'name' ? `${a.firstName} ${a.lastName}`.toLowerCase() : a.email.toLowerCase();
+      const otherValue = field === 'name' ? `${b.firstName} ${b.lastName}`.toLowerCase() : b.email.toLowerCase();
 
-  const openAddProductModal = () => {
-    setShowAddProductModal(true);
-  };
+      return sortOrder ? compareValue.localeCompare(otherValue) : otherValue.localeCompare(compareValue);
+    });
 
-  const closeAddProductModal = () => {
-    setShowAddProductModal(false);
-  };
-
-  const openDeleteProductModal = (productID) => {
-    setSelectedProductID(productID);
-    setShowDeleteProductModal(true);
-  };
-
-  const closeDeleteProductModal = () => {
-    setShowDeleteProductModal(false);
-  };
-
-  const editProduct = async (productID) => {
-    // Your edit product logic here
-  };
-
-  const openEditProductModal = (productID) => {
-    setSelectedProductID(productID);
-    setShowEditProductModal(true);
-  };
-
-  const closeEditProductModal = () => {
-    setShowEditProductModal(false);
-  };
-
-  const sortOptions = [
-    { name: 'Clear filter', href: '#', current: false },
-    { name: 'Available', href: '#', current: false },
-    { name: 'Sold out', href: '#', current: false },
-    { name: 'Discounted', href: '#', current: false },
-  ];
-
-  const selectedChangeFilter = (value) => {
-    // Your filter logic here
+    setCustomers(sortedData);
+    setSortOrder(!sortOrder);
   };
 
   const searchUser = (e) => {
     e.preventDefault();
-    // Your search logic here
+    setShowSearch(true);
+
+    const result = customers
+      .filter((customer) => customer.role === 'client')
+      .filter((customer) => {
+        const userFirstName = (customer.firstName || '').toLowerCase();
+        const userLastName = (customer.lastName || '').toLowerCase();
+
+        const [searchFirstName, searchLastName] = searchName.toLowerCase().split(' ');
+
+        return (
+          userFirstName.includes(searchFirstName) ||
+          userFirstName.includes(searchLastName) ||
+          userLastName.includes(searchFirstName) ||
+          userLastName.includes(searchLastName)
+        );
+      });
+
+    setResultSearch(result);
+  };
+
+  const openViewCustomerModal = (userID) => {
+    setSelectedCustomerID(userID);
+    setShowViewCustomerModal(true);
+  };
+
+  const closeViewCustomerModal = () => {
+    setShowViewCustomerModal(false);
   };
 
   return (
     <div>
       <form onSubmit={searchUser}>
-        {/* Your search form */}
+        <div className="flex justify-end pb-6 pt-1">
+          <TextField
+            label="Search for Company"
+            variant="outlined"
+            size="small"
+            onChange={(e) => setSearchName(e.target.value.toLowerCase())}
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={!searchName}
+            style={{ marginLeft: '8px' }}
+          >
+            Search
+          </Button>
+        </div>
       </form>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell onClick={() => toggleSort('name')}>Name &#8597;</TableCell>
+              <TableCell onClick={() => toggleSort('email')}>Email &#8597;</TableCell>
+              <TableCell>Phone Number</TableCell>
+              <TableCell>Cars</TableCell>
+ 
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {(showSearch ? resultSearch : customers).map((customer) => (
+              <TableRow key={customer._id} className="border-b">
+                <TableCell>{`${customer.firstName} ${customer.lastName}`}</TableCell>
+                <TableCell>{customer.email}</TableCell>
+                <TableCell>{customer.phoneNumber}</TableCell>
+                <TableCell>
+                  <Link to={`/companycars/${customer._id}`}>
+                    <img src={car} alt="car" />
+                  </Link>
+                </TableCell>
 
-      {filterShow || showSearch ? (
-        <div>
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell onClick={() => toggleSort('category')}>Category &#8597;</TableCell>
-                  <TableCell onClick={() => toggleSort('name')}>Name &#8597;</TableCell>
-                  <TableCell>Thumbnail</TableCell>
-                  <TableCell onClick={() => toggleSort('price')}>Price &#8597;</TableCell>
-                  <TableCell onClick={() => toggleSort('discountPercentage')}>Discounted &#8597;</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {showFilterItem.map((product) => (
-                  <TableRow key={product._id}>
-                    <TableCell>{categories[product.categoryID]}</TableCell>
-                    <TableCell>{product.name}</TableCell>
-                    <TableCell>
-                      <img src={product.images[0]} alt="product" />
-                    </TableCell>
-                    <TableCell>{product.price}</TableCell>
-                    <TableCell>{product.discountPercentage !== 0 ? `${product.discountPercentage}%` : '-'}</TableCell>
-                    <TableCell>{product.status}</TableCell>
-                    <TableCell>
-                      <Button onClick={() => openEditProductModal(product._id)}>
-                        <img src="../Images/dashboardIcons/edit.png" alt="edit" />
-                      </Button>
-                      <Button onClick={() => openDeleteProductModal(product._id)}>
-                        <img src="../Images/dashboardIcons/delete.png" alt="delete" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
-          {/* Modals */}
-          {showDeleteProductModal && (
-            <Modal open={showDeleteProductModal} onClose={closeDeleteProductModal}>
-              {/* ... (Delete Product Modal content) */}
-            </Modal>
-          )}
-          {showAddProductModal && (
-            <Modal open={showAddProductModal} onClose={closeAddProductModal}>
-              <AddCar onClose={closeAddProductModal} />
-            </Modal>
-          )}
-          {showEditProductModal && (
-            <Modal open={showEditProductModal} onClose={closeEditProductModal}>
-              <EditCar productID={selectedProductID} onClose={closeEditProductModal} />
-            </Modal>
-          )}
-        </div>
-      ) : (
-        <div>
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell onClick={() => toggleSort('category')}>Category &#8597;</TableCell>
-                  <TableCell onClick={() => toggleSort('name')}>Name &#8597;</TableCell>
-                  <TableCell>Thumbnail</TableCell>
-                  <TableCell onClick={() => toggleSort('price')}>Price &#8597;</TableCell>
-                  <TableCell onClick={() => toggleSort('discountPercentage')}>Discounted &#8597;</TableCell>
-                  <TableCell>Status</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {products.map((product) => (
-                  <TableRow key={product._id}>
-                    <TableCell>{categories[product.categoryID]}</TableCell>
-                    <TableCell>{product.name}</TableCell>
-                    <TableCell>
-                      <img src={product.images[0]} alt="product" />
-                    </TableCell>
-                    <TableCell>{product.price}$</TableCell>
-                    <TableCell>{product.discountPercentage !== 0 ? `${product.discountPercentage}%` : '-'}</TableCell>
-                    <TableCell>{product.status}</TableCell>
-                    <TableCell>
-                      <Button onClick={() => openEditProductModal(product._id)}>
-                        <img src="../Images/dashboardIcons/edit.png" alt="edit" />
-                      </Button>
-                      <Button onClick={() => openDeleteProductModal(product._id)}>
-                        <img src="../Images/dashboardIcons/delete.png" alt="delete" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-
-          {/* Modals */}
-          {showDeleteProductModal && (
-            <Modal open={showDeleteProductModal} onClose={closeDeleteProductModal}>
-              {/* ... (Delete Product Modal content) */}
-            </Modal>
-          )}
-          {showAddProductModal && (
-            <Modal open={showAddProductModal} onClose={closeAddProductModal}>
-              <AddCar onClose={closeAddProductModal} />
-            </Modal>
-          )}
-          {showEditProductModal && (
-            <Modal open={showEditProductModal} onClose={closeEditProductModal}>
-              <EditCar productID={selectedProductID} onClose={closeEditProductModal} />
-            </Modal>
-          )}
-        </div>
-      )}
     </div>
   );
 };
 
-export default CarDash;
+export default CompanyDash;

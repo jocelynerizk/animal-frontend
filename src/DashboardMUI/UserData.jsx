@@ -75,11 +75,7 @@ const CompanyDash = () => {
               ))}
             </TableBody>
           </Table>
-          <Link to="/add-user">
-            <Button>
-              <img src={nouveau} alt="Nouveau" />
-            </Button>
-          </Link>
+
         </Grid>
       </Grid>
     </Container>

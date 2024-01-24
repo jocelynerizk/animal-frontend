@@ -95,7 +95,7 @@ const CompanyDash = () => {
       <form onSubmit={searchUser}>
         <div className="flex justify-end pb-6 pt-1">
           <TextField
-            label="Search for Company"
+            label="Search By Registration Number"
             variant="outlined"
             size="small"
             onChange={(e) => setSearchName(e.target.value.toLowerCase())}

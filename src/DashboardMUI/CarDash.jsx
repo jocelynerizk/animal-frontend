@@ -13,8 +13,10 @@ import {
   Modal,
   styled, // Import the styled utility from @mui/system
 } from '@mui/material';
+import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
 import car from '../images/car.png';
+import auditreport from '../images/auditreport.png';
 
 // Use the styled utility to create a styled component
 const MyPaper = styled(Paper)({
@@ -26,7 +28,7 @@ const MyPaper = styled(Paper)({
   padding: '16px',
 });
 
-const CompanyDash = () => {
+const CarDash = () => {
   const [customers, setCustomers] = useState([]);
   const [showViewCustomerModal, setShowViewCustomerModal] = useState(false);
   const [selectedCustomerID, setSelectedCustomerID] = useState(null);
@@ -48,45 +50,30 @@ const CompanyDash = () => {
     fetchCustomers();
   }, []);
 
-  const toggleSort = (field) => {
-    const sortedData = [...customers].sort((a, b) => {
-      const compareValue = field === 'name' ? `${a.firstName} ${a.lastName}`.toLowerCase() : a.email.toLowerCase();
-      const otherValue = field === 'name' ? `${b.firstName} ${b.lastName}`.toLowerCase() : b.email.toLowerCase();
-
-      return sortOrder ? compareValue.localeCompare(otherValue) : otherValue.localeCompare(compareValue);
-    });
-
-    setCustomers(sortedData);
-    setSortOrder(!sortOrder);
-  };
 
   const searchUser = (e) => {
     e.preventDefault();
     setShowSearch(true);
 
     const result = customers
-      .filter((customer) => customer.role === 'client')
-      .filter((customer) => {
-        const userFirstName = (customer.firstName || '').toLowerCase();
-        const userLastName = (customer.lastName || '').toLowerCase();
 
-        const [searchFirstName, searchLastName] = searchName.toLowerCase().split(' ');
+      .filter((customer) => {
+        const userFirstName = (customer.immatricule || '').toLowerCase();
+        const [searchFirstName] = searchName.toLowerCase().split(' ');
 
         return (
-          userFirstName.includes(searchFirstName) ||
-          userFirstName.includes(searchLastName) ||
-          userLastName.includes(searchFirstName) ||
-          userLastName.includes(searchLastName)
+          userFirstName.includes(searchFirstName) 
+        
         );
       });
 
     setResultSearch(result);
   };
 
-  const openViewCustomerModal = (userID) => {
-    setSelectedCustomerID(userID);
-    setShowViewCustomerModal(true);
-  };
+  // const openViewCustomerModal = (userID) => {
+  //   setSelectedCustomerID(customerID);
+  //   setShowViewCustomerModal(true);
+  // };
 
   const closeViewCustomerModal = () => {
     setShowViewCustomerModal(false);
@@ -117,25 +104,40 @@ const CompanyDash = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell onClick={() => toggleSort('name')}>Name &#8597;</TableCell>
-              <TableCell onClick={() => toggleSort('email')}>Email &#8597;</TableCell>
-              <TableCell>Phone Number</TableCell>
-              <TableCell>Cars</TableCell>
- 
+              <TableCell >Registration Number</TableCell>
+              <TableCell >Brand</TableCell>
+              <TableCell>Status </TableCell>
+              <TableCell>Details </TableCell>
+              <TableCell>Actions</TableCell> 
+              <TableCell>Audit Report </TableCell>
+
             </TableRow>
           </TableHead>
           <TableBody>
             {(showSearch ? resultSearch : customers).map((customer) => (
               <TableRow key={customer._id} className="border-b">
-                <TableCell>{`${customer.firstName} ${customer.lastName}`}</TableCell>
-                <TableCell>{customer.email}</TableCell>
-                <TableCell>{customer.phoneNumber}</TableCell>
+                <TableCell>{customer.immatricule}</TableCell>
+                <TableCell>{customer.brand}</TableCell>
+                <TableCell>{customer.status}</TableCell>
+
                 <TableCell>
                   <Link to={`/companycars/${customer._id}`}>
                     <img src={car} alt="car" />
                   </Link>
                 </TableCell>
+                <TableCell>
+                  {/* <Button onClick={() => openEditCarModal(category._id)}> */}
+                  <Button >
+                    <EditIcon />
+                  </Button>
+                  </TableCell>
 
+                  <TableCell>
+
+                  <Link to={`/companycars/${customer._id}`}>
+                    <img src={auditreport} alt="auditreport" />
+                  </Link>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -146,4 +148,4 @@ const CompanyDash = () => {
   );
 };
 
-export default CompanyDash;
+export default CarDash;

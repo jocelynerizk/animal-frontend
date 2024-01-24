@@ -292,7 +292,7 @@ export default function Dashboard() {
                 }}
               />
               <Tab
-                label={open ? "Users" : null}
+                label={open ? "TEAM" : null}
                 icon={
                   <ListItemIcon>
                     <AccountCircle

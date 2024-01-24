@@ -135,8 +135,8 @@ const CategoryDash = () => {
             <TableRow>
               <TableCell>Category </TableCell>
               <TableCell>النوع</TableCell>
-              <TableCell>Requirements </TableCell>
-              <TableCell></TableCell>
+              <TableCell>Details </TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -148,9 +148,13 @@ const CategoryDash = () => {
                   <Link to={`/RequirementDash/${category._id}`}>
                     <img src={details} alt="details" />
                   </Link>
+                  </TableCell>
+                  <TableCell>
                   <Button onClick={() => openEditCategoryModal(category._id)}>
                     <EditIcon />
                   </Button>
+                  </TableCell>
+                  <TableCell>
                   <Button onClick={() => openDeleteCategoryModal(category._id)}>
                     <DeleteIcon />
                   </Button>

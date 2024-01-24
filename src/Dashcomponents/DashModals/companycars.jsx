@@ -22,13 +22,14 @@ import AddCar from "./AddCar";
 
 const CompanyCars = () => {
   const { ownerID } = useParams();
-  const [Cars, setCars] = useState([]);
+  const [cars, setCars] = useState([]);
   const [showAddCarModal, setShowAddCarModal] = useState(false);
 
   const fetchCars = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/car/getAllDetails`);
+      const response = await axios.get(`http://127.0.0.1:8000/car/getAllDetails/`);
       const carsData = response.data.data;
+
       setCars(carsData);
 
     } catch (error) {
@@ -86,27 +87,23 @@ const CompanyCars = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Description</TableCell>
-              <TableCell>Description (Arabic)</TableCell>
-              <TableCell>Category</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell>Registration Number</TableCell>
+              <TableCell>Brand (Arabic)</TableCell>
+              <TableCell>Status</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {Cars.length > 0 ? (
-              Cars.map((car) => (
-                <TableRow key={car._id}>
-                  <TableCell>{car.immatricule}</TableCell>
-                  <TableCell>{car.brand}</TableCell>
-                  <TableCell>{car.status}</TableCell>
-                  <TableCell>
-                    {/* Actions column content */}
-                  </TableCell>
-                </TableRow>
+          {cars.length > 0 ? (
+            cars.map((car) => ( 
+              <TableRow key={car._id}>
+                <TableCell>{car.immatricule}</TableCell>
+                <TableCell>{car.brand}</TableCell>
+                <TableCell>{car.status}</TableCell>
+              </TableRow> 
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={4}>No cars available</TableCell>
+                <TableCell colSpan={3}>No cars available</TableCell>
               </TableRow>
             )}
           </TableBody>

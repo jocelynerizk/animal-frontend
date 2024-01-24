@@ -1,8 +1,7 @@
 import { useRef } from "react";
-import { BrowserRouter, Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { FaBars, FaTimes } from "react-icons/fa";
 import logo from "../../images/logo1.png";
-import Search from '../heropage/Search';
+import Searchout from '../heropage/Searchout';
 
 
 const NavBar = () => {
@@ -11,7 +10,6 @@ const NavBar = () => {
     navRef.current.classList.toggle("responsive_nav");
   }
 
-  const navigate = useNavigate();
   return (
     <div className="minihead">
       <div className="mylogo1">
@@ -33,7 +31,7 @@ const NavBar = () => {
       </nav>
 
       <div>
-      <Search />
+      <Searchout />
       </div>
     </div>
     

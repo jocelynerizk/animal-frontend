@@ -131,6 +131,7 @@ const CompanyDash = () => {
             <TableCell>{customer.email}</TableCell>
             <TableCell>{customer.phoneNumber}</TableCell>
             <TableCell>
+            ownerID={selectedCustomerID}
               <Link to={`/CompanyCars/${customer._id}`}>
                 <img src={car} alt="car" />
               </Link>

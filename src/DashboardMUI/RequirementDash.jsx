@@ -120,7 +120,7 @@ const RequirementDash = () => {
 
   return (
     <div>
-      <h1 style={{ color: 'aqua', textShadow: '2px 2px blue', textAlign: 'center' }}>{title}</h1>
+      <h1 style={{ color: '#2196F3', textShadow: '2px 2px 4px #00BCD4' }}>{title}</h1>
 
       <TableContainer component={Paper}>
         <Table>

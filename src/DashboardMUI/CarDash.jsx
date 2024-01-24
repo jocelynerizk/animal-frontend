@@ -40,7 +40,7 @@ const CarDash = () => {
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const response = await axios.get("http://127.0.01:8000/car/getAll");
+        const response = await axios.get("https://animalbackend1.onrender.com/car/getAll");
         setCustomers(response.data.data);
       } catch (error) {
         console.error(`Error fetching customers' data: `, error);

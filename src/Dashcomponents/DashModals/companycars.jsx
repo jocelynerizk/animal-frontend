@@ -21,13 +21,13 @@ import { Add as AddIcon } from '@material-ui/icons';
 import AddCar from "./AddCar";
 
 const CompanyCars = () => {
-  const { ownerID } = useParams();
+  const { ownerid  } = useParams();
   const [cars, setCars] = useState([]);
   const [showAddCarModal, setShowAddCarModal] = useState(false);
 
   const fetchCars = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/car/getAllDetails/`);
+      const response = await axios.get(`'https://animalbackend1.onrender.com/car/getDetails/${ownerid}`);
       const carsData = response.data.data;
 
       setCars(carsData);
@@ -69,7 +69,7 @@ const CompanyCars = () => {
               X
             </Button>
             <AddCar
-              ownerID={ownerID}
+              // ownerID={ID}
               fetchCars={fetchCars}
               closeAddCarModal={closeAddCarModal}
             />

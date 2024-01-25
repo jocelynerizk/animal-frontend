@@ -33,7 +33,7 @@ const RequirementDash = () => {
 
   const fetchRequirements = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/requirement/getAllByCategoryID/${categoryId}`);
+      const response = await axios.get(`'https://animalbackend1.onrender.com/getAllByCategoryID/${categoryId}`);
       const requirementsData = response.data.data;
       setRequirements(requirementsData);
       setTitle(requirementsData.length > 0 ? requirementsData[0].catID.title : '');
@@ -128,7 +128,6 @@ const RequirementDash = () => {
             <TableRow>
               <TableCell>Description</TableCell>
               <TableCell>Description (Arabic)</TableCell>
-              <TableCell>Category</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -137,7 +136,6 @@ const RequirementDash = () => {
               <TableRow key={requirement._id}>
                 <TableCell>{requirement.desc}</TableCell>
                 <TableCell>{requirement.desc_a}</TableCell>
-                <TableCell>{requirement.title}</TableCell>
                 <TableCell>
                   <Button onClick={() => openEditRequirementModal(requirement._id)}>
                     <EditIcon />

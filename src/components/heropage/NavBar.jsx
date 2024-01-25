@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import logo from "../../images/logo1.png";
-import Searchout from '../heropage/Searchout';
+import Search from '../heropage/Search';
 
 
 const NavBar = () => {
@@ -31,7 +31,7 @@ const NavBar = () => {
       </nav>
 
       <div>
-      <Searchout />
+      <Search />
       </div>
     </div>
     

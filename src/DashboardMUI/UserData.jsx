@@ -46,7 +46,7 @@ const CompanyDash = () => {
           <Table size="small">
             <TableHead>
               <TableRow>
-                <TableCell>Company Name</TableCell>
+                <TableCell>Name</TableCell>
                 <TableCell>Phone Number</TableCell>
                 <TableCell>Email</TableCell>
                 <TableCell>Apply Date</TableCell>

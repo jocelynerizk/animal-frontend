@@ -41,6 +41,9 @@ const CompanyDash = () => {
     fetchCustomers();
   }, []);
 
+  const handleProductClick = (ownerid) => { 
+    window.location.href = `/CompanyCars/${ownerid}`;
+  }
   const toggleSort = (field) => {
     const sortedData = [...customers].sort((a, b) => {
       const compareValue = (field === 'name')
@@ -95,7 +98,7 @@ const CompanyDash = () => {
       <form onSubmit={searchUser}>
         <div className="flex justify-end pb-6 pt-1">
           <TextField
-            label="Search By Registration Number"
+            label="Search By Name"
             variant="outlined"
             size="small"
             onChange={(e) => setSearchName(e.target.value.toLowerCase())}
@@ -130,12 +133,18 @@ const CompanyDash = () => {
             <TableCell>{`${customer.firstName} ${customer.lastName}`}</TableCell>
             <TableCell>{customer.email}</TableCell>
             <TableCell>{customer.phoneNumber}</TableCell>
-            <TableCell>
- 
-              <Link to={`/CompanyCars/${customer._id}`}>
-                <img src={car} alt="car" />
-              </Link>
-            </TableCell>
+        
+
+<TableCell>
+  <img 
+    src={car} 
+    alt="car" 
+    style={{ cursor: 'pointer' }} 
+    onClick={() => handleProductClick(customer._id)}
+  />
+</TableCell>
+
+
             <TableCell
               className="italic text-red-700 hover:underline"
               onClick={() => openViewCustomerModal(customer._id)}
@@ -164,7 +173,7 @@ const CompanyDash = () => {
           >
             X
           </button>
-          <ViewCompanies ownerID={selectedCustomerID} />
+          {/* <ViewCompanies customer._id ={selectedCustomerID} /> */}
         </Paper>
       </Modal>
     </div>

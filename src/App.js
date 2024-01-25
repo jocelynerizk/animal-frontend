@@ -14,7 +14,9 @@ import DashBoard from "./Pages/Dashboard"
 import AddUser from "./Dashcomponents/DashModals/AddUser"
 import EditUser from "./Dashcomponents/DashModals/EditUser"
 import RequirementDash from "./DashboardMUI/RequirementDash"
+import AuditDash from "./DashboardMUI/AuditDash"
 import CarDash from "./DashboardMUI/CarDash"
+
 import CompanyCars from "./Dashcomponents/DashModals/CompanyCars"
 
 const theme = createTheme();
@@ -38,6 +40,7 @@ const App = () => {
           <Route path="/*" element={<DashBoard />} />
           <Route path="/RequirementDash/:categoryId" element={<RequirementDash />} />
           <Route path="/CompanyCars/:ownerid" element={<CompanyCars />} />
+          <Route path="/AuditDash" element={<AuditDash />} />
 
         </Routes>
         </ThemeProvider>

@@ -17,7 +17,8 @@ import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon } from '@materia
 import { Link } from 'react-router-dom';
 import car from '../images/car.png';
 import auditreport from '../images/auditreport.png';
-
+import AuditDash from "./AuditDash"
+import CompanyCars from '../Dashcomponents/DashModals/CompanyCars';
 // Use the styled utility to create a styled component
 const MyPaper = styled(Paper)({
   position: 'absolute',
@@ -84,7 +85,7 @@ const CarDash = () => {
       <form onSubmit={searchUser}>
         <div className="flex justify-end pb-6 pt-1">
           <TextField
-            label="Search for Company"
+            label="Search By Registration Number"
             variant="outlined"
             size="small"
             onChange={(e) => setSearchName(e.target.value.toLowerCase())}
@@ -134,7 +135,7 @@ const CarDash = () => {
 
                   <TableCell>
 
-                  <Link to={`/companycars/${customer._id}`}>
+                  <Link to={`/AuditDash`}>
                     <img src={auditreport} alt="auditreport" />
                   </Link>
                 </TableCell>

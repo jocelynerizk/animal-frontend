@@ -73,10 +73,10 @@ export default function SearchAppBar() {
 
       <Dialog open={isPopupOpen} onClose={handleClosePopup}>
         <DialogTitle>
-          <div style={{ color: 'blue' }}>Texte avec une couleur différente</div>
+          <div style={{ color: 'blue' }}>Company Name + Vehicule Number</div>
         </DialogTitle>
         <DialogContent>
-          <div style={{ color: 'green' }}>Autre texte avec une couleur différente</div>
+          <div style={{ color: 'green' }}>Certified Not Conforme on 01/01/2000 </div>
         </DialogContent>
         <Button onClick={handleClosePopup} color="primary">
             Fermer

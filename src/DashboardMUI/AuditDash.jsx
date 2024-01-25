@@ -22,6 +22,7 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import GeneratQRCodeGeneratore from "../components/QRCodeGenerator";
 
 function createData(id, name, calories) {
   return {
@@ -30,20 +31,21 @@ function createData(id, name, calories) {
     calories,
   };
 }
+
 const headerStyle = {
-    backgroundColor: 'white', 
-    color: '#2196f3', 
-    boxShadow: '0px 2px 5px 0px #00bcd4', // Ombre légère
-    textAlign: 'center', // Centrer le texte
-    fontStyle: 'italic', // Texte en italique
-    padding : '10 px',
-  };
-  
+  backgroundColor: 'white',
+  color: '#2196f3',
+  boxShadow: '0px 2px 5px 0px #00bcd4',
+  textAlign: 'center',
+  fontStyle: 'italic',
+  padding: '10px',
+};
+
 const rows = [
-  createData(1, 'Good Temperature', 'حرارة معتدلة' ),
+  createData(1, 'Good Temperature', 'حرارة معتدلة'),
   createData(2, 'Clean Clothes', 'نظافةشحصية جيدة'),
   createData(3, 'Good Human Health', 'صحة جيدة'),
-  createData(4, 'Good Documentation',  'توسيق جيدة'),
+  createData(4, 'Good Documentation', 'توسيق جيدة'),
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -61,7 +63,6 @@ function getComparator(order, orderBy) {
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
-
 
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
@@ -88,8 +89,6 @@ const headCells = [
     disablePadding: false,
     label: 'Arabic Description',
   },
-
-
 ];
 
 function EnhancedTableHead(props) {
@@ -178,8 +177,8 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-Audit Report     
-   </Typography>
+          Audit Report
+        </Typography>
       )}
 
       {numSelected > 0 ? (
@@ -275,7 +274,7 @@ export default function EnhancedTable() {
 
   return (
     <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '20px' }}>
-             <div style={headerStyle}>
+      <div style={headerStyle}>
         <Typography
           variant="h6"
           id="tableTitle"
@@ -367,18 +366,17 @@ export default function EnhancedTable() {
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
       />
-         <Box sx={{ mt: 2, mb: 2 }}>{/* Ajout d'une marge top (mt) pour séparer le bouton du reste du contenu */}
+      <Box sx={{ mt: 2, mb: 2 }}>{/* Ajout d'une marge top (mt) pour séparer le bouton du reste du contenu */}
         <Button variant="contained" color="primary">
-            Update Report
+          Update Report
         </Button>
-        </Box>
-        <Box sx={{ ml: 2 }}> 
-        <Button variant="contained" color="primary">
-            Generate Barcode
-        </Button>
-  
-
       </Box>
+      <Box sx={{ ml: 2 }}>
+        <Button variant="contained" color="primary">
+          GENERATE BARCODE
+        </Button>
+      </Box>
+      <GeneratQRCodeGeneratore />
     </Box>
   );
 }

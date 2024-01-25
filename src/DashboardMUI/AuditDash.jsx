@@ -283,6 +283,9 @@ export default function EnhancedTable() {
           Taanayel Comapny Car :1259812
         </Typography>
       </div>
+      
+      <GeneratQRCodeGeneratore />
+      
       <Paper sx={{ width: '70%', mb: 2, overflowX: 'auto', marginTop: '10px', marginBottom: '20px' }}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
@@ -371,12 +374,7 @@ export default function EnhancedTable() {
           Update Report
         </Button>
       </Box>
-      <Box sx={{ ml: 2 }}>
-        <Button variant="contained" color="primary">
-          GENERATE BARCODE
-        </Button>
-      </Box>
-      <GeneratQRCodeGeneratore />
+
     </Box>
   );
 }

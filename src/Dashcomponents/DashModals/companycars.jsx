@@ -21,13 +21,13 @@ import { Add as AddIcon } from '@material-ui/icons';
 import AddCar from "./AddCar";
 
 const CompanyCars = () => {
-  const { ownerid  } = useParams();
+  const { ownerid } = useParams();
   const [cars, setCars] = useState([]);
   const [showAddCarModal, setShowAddCarModal] = useState(false);
 
   const fetchCars = async () => {
     try {
-      const response = await axios.get(`'https://animalbackend1.onrender.com/car/getDetails/${ownerid}`);
+      const response = await axios.get(`'http://127.0.01:8000/car/getDetails/${ownerid}`);
       const carsData = response.data.data;
 
       setCars(carsData);
@@ -93,13 +93,13 @@ const CompanyCars = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-          {cars.length > 0 ? (
-            cars.map((car) => ( 
-              <TableRow key={car._id}>
-                <TableCell>{car.immatricule}</TableCell>
-                <TableCell>{car.brand}</TableCell>
-                <TableCell>{car.status}</TableCell>
-              </TableRow> 
+            {cars.length > 0 ? (
+              cars.map((car) => (
+                <TableRow key={car._id}>
+                  <TableCell>{car.immatricule}</TableCell>
+                  <TableCell>{car.brand}</TableCell>
+                  <TableCell>{car.status}</TableCell>
+                </TableRow>
               ))
             ) : (
               <TableRow>

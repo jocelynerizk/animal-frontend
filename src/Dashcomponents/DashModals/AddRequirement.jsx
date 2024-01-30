@@ -27,7 +27,7 @@ function AddRequirement({ fetchrequirements, closeAddrequirementModal }) {
         newRequirement.append('desc_a', desc_a);
 
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/Requiremen/add`, newRequirement, {
+            const response = await axios.post(`http://127.0.01:8000/Requiremen/add`, newRequirement, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${token}`,

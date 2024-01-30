@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Dashboard from "./oldDashboard"
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -15,19 +17,24 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
-import SignUP from "./SignUp";
+import IconButton from "@mui/material/IconButton";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showFailLogIn, setShowFailLogIn] = useState(false);
   const [failMessage, setFailMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
+  const navigate = useNavigate();
+  const goToHome = () => {
+    navigate("/");
+  };
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -42,11 +49,9 @@ export default function SignIn() {
       return;
     }
 
-    setIsLoading(true);
-
     try {
       const response = await axios.post(
-        `http://localhost:8000/user/login`,
+        `http://127.0.01:8000/user/login`,
         {
           email,
           password,
@@ -54,7 +59,6 @@ export default function SignIn() {
         {
           headers: {
             "Content-Type": "application/json",
-          
           },
         }
       );
@@ -69,8 +73,13 @@ export default function SignIn() {
         localStorage.setItem("role", data.data.role);
 
         if (data.data.role === "admin") {
-          navigate("/*");
+          navigate("/Dashboard");
         }
+
+        if (data.data.role === "employee") {
+          navigate("/Dashboard");
+        }
+
         if (data.data.role === "client") {
           navigate("/");
         }
@@ -81,6 +90,7 @@ export default function SignIn() {
       } else {
         console.log("Login failed:", data.message);
         setShowFailLogIn(true);
+        setFailMessage(data.message);
 
         if (response.status === 401) {
           // Unauthorized (incorrect email or password)
@@ -100,7 +110,7 @@ export default function SignIn() {
     } catch (error) {
       console.log("Error during login:", error.message);
       setShowFailLogIn(true);
-
+      setFailMessage(error.response?.data.message);
       if (error.response) {
         if (error.response.status === 401) {
           // Unauthorized (incorrect email or password)
@@ -120,14 +130,18 @@ export default function SignIn() {
         // Network or other errors
         setFailMessage("An error occurred. Please try again later.");
       }
-    } finally {
-      setIsLoading(false);
     }
   };
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
+        <IconButton
+          onClick={goToHome}
+          style={{ top: "114px", color: "#DF2E38" }}
+        >
+          <ArrowBackIcon /> Home
+        </IconButton>
+        <CssBaseline sx={{ color: "green" }} />
         <Box
           sx={{
             marginTop: 8,
@@ -137,8 +151,10 @@ export default function SignIn() {
           }}
         >
 
-          <Typography variant="h4" align="center" gutterBottom style={{ color: '#2196F3', textShadow: '2px 2px 4px #00BCD4' }}>
-            WELCOME
+          <LockOutlinedIcon />
+
+          <Typography component="h1" variant="h5" sx={{ color: "DF2E38}" }}>
+            Sign in
           </Typography>
           <Box
             component="form"
@@ -159,31 +175,56 @@ export default function SignIn() {
               onChange={(e) => setEmail(e.target.value)}
             />
             <TextField
-              margin="normal"
               required
               fullWidth
               name="password"
               label="Password"
-              type="password"
+              type={showPassword ? "text" : "password"} // Use conditional type based on showPassword
               id="password"
-              autoComplete="current-password"
-              value={password} // Add this line
-              onChange={(e) => setPassword(e.target.value)} // Add this line
+              autoComplete="new-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <IconButton
+                    sx={{
+                      position: "absolute",
+                      top: "50%",
+                      right: 2,
+                      transform: "translateY(-50%)",
+                      cursor: "pointer",
+                    }}
+                    onClick={togglePasswordVisibility}
+                  >
+                    {showPassword ? (
+                      <VisibilityIcon fontSize="small" />
+                    ) : (
+                      <VisibilityOffIcon fontSize="small" />
+                    )}
+                  </IconButton>
+                ),
+              }}
             />
 
             <Button
               type="submit"
               fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2, color: 'aqua', fontSize: '20px', padding: '8px' }}
-
+              style={{
+                marginTop: 5,
+                marginBottom: 2,
+                backgroundColor: "#DF2E38",
+                color: "white",
+              }}
             >
               Sign In
             </Button>
-            <Grid container justifyContent="center">
-
+            <Grid container>
               <Grid item>
-                <Link href="/SignUp" variant="body2">
+                <Link
+                  href="/SignUp"
+                  variant="body2"
+                  style={{ color: "blue" }}
+                >
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
@@ -201,8 +242,6 @@ export default function SignIn() {
             </Button>
           </DialogActions>
         </Dialog>
-
-        {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
       </Container>
     </ThemeProvider>
   );

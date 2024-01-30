@@ -33,7 +33,7 @@ const RequirementDash = () => {
 
   const fetchRequirements = async () => {
     try {
-      const response = await axios.get(`'https://animalbackend1.onrender.com/getAllByCategoryID/${categoryId}`);
+      const response = await axios.get(`'http://127.0.01:8000/getAllByCategoryID/${categoryId}`);
       const requirementsData = response.data.data;
       setRequirements(requirementsData);
       setTitle(requirementsData.length > 0 ? requirementsData[0].catID.title : '');
@@ -145,7 +145,7 @@ const RequirementDash = () => {
                   </Button>
                 </TableCell>
               </TableRow>
-              
+
             ))}
           </TableBody>
         </Table>
@@ -153,7 +153,7 @@ const RequirementDash = () => {
 
       <AddRequirementButton />
 
-      <Typography  style={{ color: 'aqua',marginRight: '40px', textAlign:  'right' }}>
+      <Typography style={{ color: 'aqua', marginRight: '40px', textAlign: 'right' }}>
         <Link component={RouterLink} to="/CategoryDash">Return</Link>
       </Typography>
 

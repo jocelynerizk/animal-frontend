@@ -24,7 +24,7 @@ function EditRequirement({
 
     try {
       const response = await axios.put(
-        `${process.env.REACT_APP_API_URL}/category/update/${requirementID}`,
+        `http://127.0.01:8000/requirement/update/${requirementID}`,
         updatedRequirement,
         {
           headers: {

@@ -21,7 +21,7 @@ const CompanyDash = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("https://animalbackend1.onrender.com/user/getAll");
+        const response = await axios.get("http://127.0.01:8000/user/getAll");
         console.log("response.data", response.data.data);
         if (response.data.success) {
           setDataUser(response.data.data);

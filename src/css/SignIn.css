@@ -3,7 +3,7 @@
 }
 @media (max-width: 767px) {
     .SignIn-container {
-   background-image: url("../../public/Images/12-1.JPG");
+   background-image: url("../images/12-1.jpg");
    background-size: cover;
    background-position: center;
 

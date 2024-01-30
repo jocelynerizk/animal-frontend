@@ -41,7 +41,7 @@ const CarDash = () => {
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const response = await axios.get("https://animalbackend1.onrender.com/car/getAll");
+        const response = await axios.get("http://127.0.01:8000/car/getAll");
         setCustomers(response.data.data);
       } catch (error) {
         console.error(`Error fetching customers' data: `, error);
@@ -63,8 +63,8 @@ const CarDash = () => {
         const [searchFirstName] = searchName.toLowerCase().split(' ');
 
         return (
-          userFirstName.includes(searchFirstName) 
-        
+          userFirstName.includes(searchFirstName)
+
         );
       });
 
@@ -109,7 +109,7 @@ const CarDash = () => {
               <TableCell >Brand</TableCell>
               <TableCell>Status </TableCell>
               <TableCell>Details </TableCell>
-              <TableCell>Actions</TableCell> 
+              <TableCell>Actions</TableCell>
               <TableCell>Audit Report </TableCell>
 
             </TableRow>
@@ -131,9 +131,9 @@ const CarDash = () => {
                   <Button >
                     <EditIcon />
                   </Button>
-                  </TableCell>
+                </TableCell>
 
-                  <TableCell>
+                <TableCell>
 
                   <Link to={`/AuditDash`}>
                     <img src={auditreport} alt="auditreport" />

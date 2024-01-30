@@ -8,7 +8,7 @@ function DeleteCar({ fetchCars, closeDeleteCarModal, productID }) {
   const deleteCar = async () => {
     console.log('Car ID to be deleted:', productID);
     try {
-      const response = await axios.delete(`${process.env.REACT_APP_API_URL}/product/delete/${productID}`, {
+      const response = await axios.delete(`http://127.0.01:8000//car/delete/${productID}`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,

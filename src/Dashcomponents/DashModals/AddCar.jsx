@@ -47,7 +47,7 @@ function AddCar({ fetchCars, closeAddCarModal }) {
     }
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/product/add`, newCar, {
+      const response = await axios.post(`http://127.0.01:8000//car/add`, newCar, {
         headers: {
           'Content-Type': 'multipart/form-data',
           "Authorization": `Bearer ${token}`

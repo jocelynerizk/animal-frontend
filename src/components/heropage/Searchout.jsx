@@ -10,7 +10,7 @@ import DialogContent from '@mui/material/DialogContent';
 import Button from '@mui/material/Button';
 import axios from 'axios';
 
-const apiUrl = 'https://animalbackend1.onrender.com/getAllDetails/';
+const apiUrl = 'http://127.0.01:8000/getAllDetails/';
 
 const Search = styled('div')(({ theme }) => ({
   display: 'flex',

@@ -31,7 +31,7 @@ const CompanyDash = () => {
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const response = await axios.get('https://animalbackend1.onrender.com/user/getAll');
+        const response = await axios.get('http://127.0.01:8000/user/getAll');
         setCustomers(response.data.data);
       } catch (error) {
         console.error('Error fetching customers data:', error);
@@ -41,7 +41,7 @@ const CompanyDash = () => {
     fetchCustomers();
   }, []);
 
-  const handleProductClick = (ownerid) => { 
+  const handleProductClick = (ownerid) => {
     window.location.href = `/CompanyCars/${ownerid}`;
   }
   const toggleSort = (field) => {
@@ -115,50 +115,50 @@ const CompanyDash = () => {
         </div>
       </form>
 
-  <TableContainer component={Paper}>
-  {!showcarscompany ? (
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell onClick={() => toggleSort('name')}>Name {sortOrder ? '↓' : '↑'}</TableCell>
-          <TableCell onClick={() => toggleSort('email')}>Email {sortOrder ? '↓' : '↑'}</TableCell>
-          <TableCell>Phone Number</TableCell>
-          <TableCell>Cars</TableCell>
-          <TableCell></TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {(showSearch ? resultSearch : customers).map((customer) => (
-          <TableRow key={customer._id} className="border-b">
-            <TableCell>{`${customer.firstName} ${customer.lastName}`}</TableCell>
-            <TableCell>{customer.email}</TableCell>
-            <TableCell>{customer.phoneNumber}</TableCell>
-        
-
-<TableCell>
-  <img 
-    src={car} 
-    alt="car" 
-    style={{ cursor: 'pointer' }} 
-    onClick={() => handleProductClick(customer._id)}
-  />
-</TableCell>
+      <TableContainer component={Paper}>
+        {!showcarscompany ? (
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell onClick={() => toggleSort('name')}>Name {sortOrder ? '↓' : '↑'}</TableCell>
+                <TableCell onClick={() => toggleSort('email')}>Email {sortOrder ? '↓' : '↑'}</TableCell>
+                <TableCell>Phone Number</TableCell>
+                <TableCell>Cars</TableCell>
+                <TableCell></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {(showSearch ? resultSearch : customers).map((customer) => (
+                <TableRow key={customer._id} className="border-b">
+                  <TableCell>{`${customer.firstName} ${customer.lastName}`}</TableCell>
+                  <TableCell>{customer.email}</TableCell>
+                  <TableCell>{customer.phoneNumber}</TableCell>
 
 
-            <TableCell
-              className="italic text-red-700 hover:underline"
-              onClick={() => openViewCustomerModal(customer._id)}
-            >
-              View Details
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  ) : (
-    <CompanyCars />
-  )}
-</TableContainer>
+                  <TableCell>
+                    <img
+                      src={car}
+                      alt="car"
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => handleProductClick(customer._id)}
+                    />
+                  </TableCell>
+
+
+                  <TableCell
+                    className="italic text-red-700 hover:underline"
+                    onClick={() => openViewCustomerModal(customer._id)}
+                  >
+                    View Details
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        ) : (
+          <CompanyCars />
+        )}
+      </TableContainer>
 
       <Modal
         open={showViewCustomerModal}

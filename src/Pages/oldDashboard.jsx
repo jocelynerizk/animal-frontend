@@ -1,5 +1,6 @@
 import * as React from "react";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
+
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiDrawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
@@ -136,9 +137,9 @@ export default function Dashboard() {
     setOpen(!open);
   };
 
-  React.useEffect(() => {
-    // navigate("/CategoryDash");
-  }, []);
+  // React.handleEffect(() => {
+  //   navigate("/Dashboard");
+  // }, []);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -150,20 +151,15 @@ export default function Dashboard() {
 
     switch (newValue) {
       case 0:
-
         navigate("/CategoryDash");
-        
         break;
-        case 1:
-            navigate("/CategoryDash");
-            break;
-      case 2:
+      case 1:
         navigate("/CompanyDash");
         break;
-      case 3:
+      case 2:
         navigate("/CarDash");
         break;
-      case 4:
+      case 3:
         navigate("/userData");
         break;
       default:
@@ -234,7 +230,7 @@ export default function Dashboard() {
               }}
             >
               <Tab
-                label={open ? "Dashboard" : null}
+                label={open ? "CategoryDash" : null}
                 icon={
                   <ListItemIcon>
                     <AcUnitIcon
@@ -255,10 +251,10 @@ export default function Dashboard() {
                 }}
               />
               <Tab
-                label={open ? "Categories" : null}
+                label={open ? "CompanyDash" : null}
                 icon={
                   <ListItemIcon>
-                     <AcUnitIcon
+                    <Business
                       sx={{
                         color: value === 1 ? 'aqua' : 'blue',
                         fontSize: 40,
@@ -276,10 +272,10 @@ export default function Dashboard() {
                 }}
               />
               <Tab
-                label={open ? "Companies" : null}
+                label={open ? "CarDash" : null}
                 icon={
                   <ListItemIcon>
-                    <Business
+                    <CarRental
                       sx={{
                         color: value === 2 ? 'aqua' : 'blue',
                         fontSize: 40,
@@ -297,28 +293,7 @@ export default function Dashboard() {
                 }}
               />
               <Tab
-                label={open ? "Cars" : null}
-                icon={
-                  <ListItemIcon>
-                     <CarRental
-                      sx={{
-                        color: value === 3 ? 'aqua' : 'blue',
-                        fontSize: 40,
-                        marginRight: '10px'
-                      }}
-                    />
-                  </ListItemIcon>
-                }
-                {...a11yProps(3)}
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "flex-start",
-                  alignItems: "center",
-                }}
-              />
-                    <Tab
-                label={open ? "Team" : null}
+                label={open ? "UserData" : null}
                 icon={
                   <ListItemIcon>
                     <AccountCircle
@@ -380,7 +355,7 @@ export default function Dashboard() {
               }
             />
             <Route
-              path="/userData"
+              path="/UserData"
               element={
                 <TabPanel value={value} index={3}>
                   <UserData />

@@ -24,7 +24,7 @@ function EditCategory({
 
     try {
       const response = await axios.put(
-        `${process.env.REACT_APP_API_URL}/category/update/${categoryID}`,
+        `http://127.0.01:8000/category/update/${categoryID}`,
         updatedCategory,
         {
           headers: {

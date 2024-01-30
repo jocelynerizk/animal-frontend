@@ -9,7 +9,7 @@ function DeleteProductImage({ closeDeleteProductImageModal, ImageIndex, ProductI
 
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/product/removeImage`,
+        `http://127.0.01:8000/car/removeImage`,
         {
           productID: ProductID,
           imageIndex: ImageIndex,

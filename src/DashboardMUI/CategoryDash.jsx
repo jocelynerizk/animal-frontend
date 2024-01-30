@@ -32,7 +32,7 @@ const CategoryDash = () => {
   const token = localStorage.getItem('token');
 
   const fetchCategories = () => {
-    axios.get('https://animalbackend1.onrender.com/category/getAll')
+    axios.get('http://127.0.01:8000/category/getAll')
       .then((response) => {
         const categoriesData = response.data.data;
         setCategories(categoriesData);
@@ -148,13 +148,13 @@ const CategoryDash = () => {
                   <Link to={`/RequirementDash/${category._id}`}>
                     <img src={details} alt="details" />
                   </Link>
-                  </TableCell>
-                  <TableCell>
+                </TableCell>
+                <TableCell>
                   <Button onClick={() => openEditCategoryModal(category._id)}>
                     <EditIcon />
                   </Button>
-                  </TableCell>
-                  <TableCell>
+                </TableCell>
+                <TableCell>
                   <Button onClick={() => openDeleteCategoryModal(category._id)}>
                     <DeleteIcon />
                   </Button>
